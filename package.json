@@ -1,0 +1,19 @@
+{
+  "name": "ppii-unidad-4-demo-librerias",
+  "private": true,
+  "description": "Demo en vivo de librerías esenciales para React: TanStack Query, Axios, React Hook Form, Zod, Multer y Material UI",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c green,cyan \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w client"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}

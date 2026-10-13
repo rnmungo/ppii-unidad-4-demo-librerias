@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Librerías esenciales para React</title>
+  <meta name="description" content="Guía visual y concisa sobre TanStack Query, Axios, React Hook Form, Zod, Multer y Material UI para proyectos React reales." />
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Resaltado de sintaxis (Prism) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --surface: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --line: #e2e8f0;
+      --code-bg: #0b1020;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0a0d16;
+        --surface: #111627;
+        --ink: #e5e7eb;
+        --muted: #94a3b8;
+        --line: #1f2937;
+        --code-bg: #060912;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0a0d16;
+      --surface: #111627;
+      --ink: #e5e7eb;
+      --muted: #94a3b8;
+      --line: #1f2937;
+      --code-bg: #060912;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); }
+    .surface { background: var(--surface); border: 1px solid var(--line); }
+    .muted { color: var(--muted); }
+    .line { border-color: var(--line); }
+
+    pre[class*="language-"] {
+      background: var(--code-bg) !important;
+      margin: 0 !important;
+      border-radius: 0 0 0.85rem 0.85rem;
+      font-size: 0.85rem !important;
+      line-height: 1.6 !important;
+      padding: 1rem 1.15rem !important;
+    }
+    code[class*="language-"], pre[class*="language-"] {
+      font-family: "JetBrains Mono", ui-monospace, monospace !important;
+      text-shadow: none !important;
+    }
+    .code-head { background: #151b2e; border-radius: 0.85rem 0.85rem 0 0; }
+
+    .chip { font-size: .72rem; letter-spacing: .04em; }
+    .flow-arrow { color: var(--muted); }
+  </style>
+</head>
+
+<body class="font-sans antialiased">
+
+  <!-- ============ HEADER ============ -->
+  <header class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600"></div>
+    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 1px 1px, #fff 1px, transparent 0); background-size: 22px 22px;"></div>
+
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20 text-white">
+      <div class="flex items-center justify-between gap-4 mb-8">
+        <span class="chip uppercase font-semibold bg-white/15 backdrop-blur px-3 py-1 rounded-full">Cheat Sheet · React</span>
+        <button id="themeToggle" class="text-sm bg-white/15 hover:bg-white/25 transition px-3 py-1.5 rounded-full" aria-label="Cambiar tema">🌓 Tema</button>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight max-w-3xl">
+        Librerías esenciales para React en el mundo real
+      </h1>
+      <p class="mt-5 text-lg sm:text-xl text-white/85 max-w-2xl">
+        Saber React es el punto de partida. Saber <strong>qué herramientas combinar</strong> es lo que te convierte en un desarrollador listo para proyectos de verdad.
+      </p>
+
+      <!-- Índice -->
+      <nav class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+        <a href="#datos" class="bg-white/10 hover:bg-white/20 transition rounded-xl px-4 py-3">
+          <div class="text-white/70 text-xs">Sección 1</div><div class="font-semibold">Datos y formularios</div>
+        </a>
+        <a href="#backend" class="bg-white/10 hover:bg-white/20 transition rounded-xl px-4 py-3">
+          <div class="text-white/70 text-xs">Sección 2</div><div class="font-semibold">Subida de archivos</div>
+        </a>
+        <a href="#ui" class="bg-white/10 hover:bg-white/20 transition rounded-xl px-4 py-3">
+          <div class="text-white/70 text-xs">Sección 3</div><div class="font-semibold">Interfaz (UI)</div>
+        </a>
+        <a href="#resumen" class="bg-white/10 hover:bg-white/20 transition rounded-xl px-4 py-3">
+          <div class="text-white/70 text-xs">Cierre</div><div class="font-semibold">Resumen rápido</div>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-20">
+
+    <!-- ============ SECCIÓN 1 ============ -->
+    <section id="datos" class="scroll-mt-6">
+      <div class="mb-8">
+        <span class="chip uppercase font-bold text-indigo-500">Sección 1</span>
+        <h2 class="text-2xl sm:text-3xl font-bold mt-1">El tridente de datos y formularios</h2>
+        <p class="muted mt-2 max-w-3xl">Combinaciones potentes: cada librería hace <em>una</em> cosa muy bien, y juntas cubren lo que vas a hacer en casi cualquier app: traer datos del servidor y mandarle datos validados.</p>
+      </div>
+
+      <!-- Card: TanStack Query + Axios -->
+      <article class="surface rounded-2xl p-5 sm:p-7 shadow-sm mb-8">
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="chip font-semibold px-2.5 py-1 rounded-full bg-rose-100 text-rose-700">TanStack Query</span>
+          <span class="text-lg muted">+</span>
+          <span class="chip font-semibold px-2.5 py-1 rounded-full bg-violet-100 text-violet-700">Axios</span>
+        </div>
+        <h3 class="text-xl font-bold">Pedir datos al servidor… sin escribir 40 líneas de <code class="font-mono text-base">useEffect</code></h3>
+
+        <div class="grid lg:grid-cols-2 gap-6 mt-6">
+          <div class="space-y-4">
+            <!-- Roles -->
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div class="rounded-xl border line p-4">
+                <div class="font-semibold text-violet-600">📡 Axios = el mensajero</div>
+                <p class="text-sm muted mt-1">Hace la petición HTTP: arma la URL, headers, convierte a JSON y maneja errores de red.</p>
+              </div>
+              <div class="rounded-xl border line p-4">
+                <div class="font-semibold text-rose-600">🧠 TanStack Query = el cerebro</div>
+                <p class="text-sm muted mt-1">Decide <em>cuándo</em> pedir, guarda la respuesta en caché y te avisa el estado.</p>
+              </div>
+            </div>
+
+            <ul class="space-y-2.5 text-sm">
+              <li class="flex gap-2"><span>✅</span><span><strong>Caché automática:</strong> si dos componentes piden los mismos datos, se hace <em>una sola</em> petición.</span></li>
+              <li class="flex gap-2"><span>✅</span><span><strong>Estados listos:</strong> <code class="font-mono text-xs bg-slate-500/10 px-1 rounded">isLoading</code>, <code class="font-mono text-xs bg-slate-500/10 px-1 rounded">isError</code>, <code class="font-mono text-xs bg-slate-500/10 px-1 rounded">data</code> sin crear 3 <code class="font-mono text-xs">useState</code>.</span></li>
+              <li class="flex gap-2"><span>✅</span><span><strong>Reintentos:</strong> si falla, reintenta solo (3 veces por defecto).</span></li>
+              <li class="flex gap-2"><span>✅</span><span><strong>Sincronización:</strong> refresca los datos al volver a la pestaña o tras una mutación.</span></li>
+            </ul>
+
+            <div class="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 text-sm">
+              <strong>💡 Idea clave:</strong> la <code class="font-mono">queryKey</code> es el "nombre" de los datos en la caché. Si cambia (ej. otro <code class="font-mono">id</code>), Query vuelve a pedir.
+            </div>
+          </div>
+
+          <div data-code="query" data-lang="jsx" data-file="useUsers.jsx"></div>
+        </div>
+      </article>
+
+      <!-- Card: RHF + Zod -->
+      <article class="surface rounded-2xl p-5 sm:p-7 shadow-sm">
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="chip font-semibold px-2.5 py-1 rounded-full bg-pink-100 text-pink-700">React Hook Form</span>
+          <span class="text-lg muted">+</span>
+          <span class="chip font-semibold px-2.5 py-1 rounded-full bg-sky-100 text-sky-700">Zod</span>
+        </div>
+        <h3 class="text-xl font-bold">Formularios rápidos y validación declarativa</h3>
+
+        <div class="grid lg:grid-cols-2 gap-6 mt-6">
+          <div class="space-y-4">
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div class="rounded-xl border line p-4">
+                <div class="font-semibold text-pink-600">⚡ React Hook Form</div>
+                <p class="text-sm muted mt-1">Usa inputs <em>no controlados</em> (refs): escribir en un campo <strong>no re-renderiza</strong> todo el formulario.</p>
+              </div>
+              <div class="rounded-xl border line p-4">
+                <div class="font-semibold text-sky-600">🛡️ Zod</div>
+                <p class="text-sm muted mt-1">Describís <em>cómo deben ser</em> los datos en un esquema. Zod valida y te da los tipos.</p>
+              </div>
+            </div>
+
+            <!-- Comparativa re-renders -->
+            <div class="rounded-xl border line overflow-hidden text-sm">
+              <div class="grid grid-cols-3 bg-slate-500/10 font-semibold">
+                <div class="p-2.5">Enfoque</div><div class="p-2.5">Re-renders al tipear "Hola"</div><div class="p-2.5">Validación</div>
+              </div>
+              <div class="grid grid-cols-3 border-t line">
+                <div class="p-2.5">useState por campo</div><div class="p-2.5 text-rose-500 font-semibold">4 (uno por tecla)</div><div class="p-2.5 muted">ifs a mano</div>
+              </div>
+              <div class="grid grid-cols-3 border-t line">
+                <div class="p-2.5">RHF + Zod</div><div class="p-2.5 text-emerald-500 font-semibold">0</div><div class="p-2.5 muted">esquema único</div>
+              </div>
+            </div>
+
+            <ul class="space-y-2.5 text-sm">
+              <li class="flex gap-2"><span>🔗</span><span><strong>zodResolver</strong> es el "puente": conecta el esquema de Zod con RHF.</span></li>
+              <li class="flex gap-2"><span>♻️</span><span>El mismo esquema se puede reutilizar en el <strong>backend</strong> para validar lo que llega.</span></li>
+              <li class="flex gap-2"><span>🧾</span><span><code class="font-mono text-xs bg-slate-500/10 px-1 rounded">z.infer</code> genera el tipo TypeScript a partir del esquema: una sola fuente de verdad.</span></li>
+            </ul>
+          </div>
+
+          <div data-code="form" data-lang="jsx" data-file="RegisterForm.jsx"></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ SECCIÓN 2 ============ -->
+    <section id="backend" class="scroll-mt-6">
+      <div class="mb-8">
+        <span class="chip uppercase font-bold text-emerald-500">Sección 2</span>
+        <h2 class="text-2xl sm:text-3xl font-bold mt-1">Backend y subida de archivos</h2>
+        <p class="muted mt-2 max-w-3xl">React vive en el navegador; los archivos se guardan en el servidor. Hay que cruzar ese puente.</p>
+      </div>
+
+      <article class="surface rounded-2xl p-5 sm:p-7 shadow-sm">
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="chip font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700">Multer</span>
+          <span class="chip font-semibold px-2.5 py-1 rounded-full bg-slate-200 text-slate-700">Node.js · Express</span>
+        </div>
+        <h3 class="text-xl font-bold">Recibir archivos <code class="font-mono text-base">multipart/form-data</code> en Express</h3>
+        <p class="muted mt-2 max-w-3xl text-sm sm:text-base">
+          <code class="font-mono">express.json()</code> entiende JSON, pero <strong>no archivos</strong>. Multer es un <em>middleware</em> que lee el cuerpo <code class="font-mono">multipart/form-data</code>, guarda el archivo (en disco o memoria) y te lo deja listo en <code class="font-mono">req.file</code>.
+        </p>
+
+        <!-- Flujo -->
+        <div class="mt-6 flex flex-col md:flex-row md:items-stretch gap-2 md:gap-0 text-sm">
+          <div class="flex-1 rounded-xl p-4 bg-sky-500/10 border border-sky-500/30">
+            <div class="font-semibold">1 · React</div>
+            <div class="muted mt-1"><code class="font-mono text-xs">&lt;input type="file"&gt;</code> → arma un <code class="font-mono text-xs">FormData</code></div>
+          </div>
+          <div class="flow-arrow self-center px-2 text-xl rotate-90 md:rotate-0">→</div>
+          <div class="flex-1 rounded-xl p-4 bg-violet-500/10 border border-violet-500/30">
+            <div class="font-semibold">2 · HTTP</div>
+            <div class="muted mt-1">POST con <code class="font-mono text-xs">multipart/form-data</code> (Axios)</div>
+          </div>
+          <div class="flow-arrow self-center px-2 text-xl rotate-90 md:rotate-0">→</div>
+          <div class="flex-1 rounded-xl p-4 bg-emerald-500/10 border border-emerald-500/30">
+            <div class="font-semibold">3 · Multer</div>
+            <div class="muted mt-1">Parsea, filtra y guarda en <code class="font-mono text-xs">/uploads</code></div>
+          </div>
+          <div class="flow-arrow self-center px-2 text-xl rotate-90 md:rotate-0">→</div>
+          <div class="flex-1 rounded-xl p-4 bg-amber-500/10 border border-amber-500/30">
+            <div class="font-semibold">4 · Tu ruta</div>
+            <div class="muted mt-1">Usa <code class="font-mono text-xs">req.file</code> y responde la URL</div>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mt-6">
+          <div data-code="multerServer" data-lang="javascript" data-file="server.js (Express)"></div>
+          <div class="space-y-6">
+            <div data-code="multerClient" data-lang="jsx" data-file="AvatarUpload.jsx (React)"></div>
+            <div class="rounded-xl bg-rose-500/10 border border-rose-500/30 p-4 text-sm">
+              <strong>⚠️ Errores típicos:</strong>
+              <ul class="list-disc ml-5 mt-1 space-y-1 muted">
+                <li>El nombre en <code class="font-mono">formData.append('avatar')</code> debe coincidir con <code class="font-mono">upload.single('avatar')</code>.</li>
+                <li>Siempre limitá <strong>tamaño</strong> y <strong>tipo</strong> de archivo: nunca confíes en el cliente.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ SECCIÓN 3 ============ -->
+    <section id="ui" class="scroll-mt-6">
+      <div class="mb-8">
+        <span class="chip uppercase font-bold text-sky-500">Sección 3</span>
+        <h2 class="text-2xl sm:text-3xl font-bold mt-1">Interfaz de usuario (UI)</h2>
+        <p class="muted mt-2 max-w-3xl">No reinventes el botón. En proyectos reales, el tiempo vale más que el CSS artesanal.</p>
+      </div>
+
+      <article class="surface rounded-2xl p-5 sm:p-7 shadow-sm">
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="chip font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Material UI (MUI)</span>
+        </div>
+        <h3 class="text-xl font-bold">Componentes preconstruidos, accesibles y personalizables</h3>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6 text-sm">
+          <div class="rounded-xl border line p-4">
+            <div class="text-2xl">🧩</div>
+            <div class="font-semibold mt-1">+50 componentes</div>
+            <p class="muted mt-1">Tablas, diálogos, menús, date pickers, steppers… listos para usar.</p>
+          </div>
+          <div class="rounded-xl border line p-4">
+            <div class="text-2xl">♿</div>
+            <div class="font-semibold mt-1">Accesibles por defecto</div>
+            <p class="muted mt-1">Roles ARIA, foco y navegación por teclado ya resueltos.</p>
+          </div>
+          <div class="rounded-xl border line p-4">
+            <div class="text-2xl">🎨</div>
+            <div class="font-semibold mt-1">Theming central</div>
+            <p class="muted mt-1">Cambiás colores y tipografía en <em>un</em> lugar y se aplica a toda la app.</p>
+          </div>
+          <div class="rounded-xl border line p-4">
+            <div class="text-2xl">🏢</div>
+            <div class="font-semibold mt-1">Ideal para paneles</div>
+            <p class="muted mt-1">Dashboards, back-offices y apps corporativas en tiempo récord.</p>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mt-6">
+          <div data-code="mui" data-lang="jsx" data-file="ProductCard.jsx"></div>
+
+          <!-- Vista previa estilo MUI -->
+          <div class="space-y-4">
+            <div class="text-xs uppercase font-semibold muted tracking-wide">Así se vería (simulación)</div>
+            <div class="rounded-xl p-6" style="background: linear-gradient(135deg, rgba(25,118,210,.08), rgba(156,39,176,.08));">
+              <div class="max-w-sm mx-auto bg-white text-slate-900 rounded-md shadow-[0_2px_1px_-1px_rgba(0,0,0,.2),0_1px_1px_0_rgba(0,0,0,.14),0_1px_3px_0_rgba(0,0,0,.12)] p-4">
+                <div class="text-xl font-medium">Teclado mecánico</div>
+                <div class="text-sm text-slate-500 mt-0.5">Switches rojos · RGB</div>
+                <div class="inline-block mt-3 text-xs font-medium bg-emerald-600 text-white rounded-full px-2.5 py-1">En stock</div>
+                <div class="flex gap-2 mt-4">
+                  <button class="uppercase text-sm font-medium tracking-wider bg-[#1976d2] hover:bg-[#1565c0] text-white rounded px-4 py-1.5 shadow">Comprar</button>
+                  <button class="uppercase text-sm font-medium tracking-wider text-[#1976d2] border border-[#1976d2]/50 hover:bg-[#1976d2]/5 rounded px-4 py-1.5">Detalles</button>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-xl bg-sky-500/10 border border-sky-500/30 p-4 text-sm">
+              <strong>🤔 ¿MUI o Tailwind?</strong> MUI te da <em>componentes</em> terminados (rápido, consistente). Tailwind te da <em>utilidades</em> para diseñar a medida (más libertad, más trabajo). Para un panel de administración, MUI suele ganar.
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ RESUMEN ============ -->
+    <section id="resumen" class="scroll-mt-6">
+      <div class="mb-8">
+        <span class="chip uppercase font-bold text-fuchsia-500">Cierre</span>
+        <h2 class="text-2xl sm:text-3xl font-bold mt-1">Resumen rápido: ¿cuál uso para qué?</h2>
+      </div>
+
+      <div class="surface rounded-2xl overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm min-w-[560px]">
+            <thead class="bg-slate-500/10 text-left">
+              <tr>
+                <th class="p-3 sm:p-4 font-semibold">Librería</th>
+                <th class="p-3 sm:p-4 font-semibold">Problema que resuelve</th>
+                <th class="p-3 sm:p-4 font-semibold">Instalación</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y" style="border-color: var(--line);">
+              <tr class="border-t line"><td class="p-3 sm:p-4 font-semibold text-violet-600">Axios</td><td class="p-3 sm:p-4 muted">Hacer peticiones HTTP de forma simple</td><td class="p-3 sm:p-4 font-mono text-xs">npm i axios</td></tr>
+              <tr class="border-t line"><td class="p-3 sm:p-4 font-semibold text-rose-600">TanStack Query</td><td class="p-3 sm:p-4 muted">Caché, carga, errores y sincronización de datos del servidor</td><td class="p-3 sm:p-4 font-mono text-xs">npm i @tanstack/react-query</td></tr>
+              <tr class="border-t line"><td class="p-3 sm:p-4 font-semibold text-pink-600">React Hook Form</td><td class="p-3 sm:p-4 muted">Formularios performantes sin re-renders</td><td class="p-3 sm:p-4 font-mono text-xs">npm i react-hook-form</td></tr>
+              <tr class="border-t line"><td class="p-3 sm:p-4 font-semibold text-sky-600">Zod</td><td class="p-3 sm:p-4 muted">Validación declarativa y tipos</td><td class="p-3 sm:p-4 font-mono text-xs">npm i zod @hookform/resolvers</td></tr>
+              <tr class="border-t line"><td class="p-3 sm:p-4 font-semibold text-emerald-600">Multer</td><td class="p-3 sm:p-4 muted">Recibir archivos en Express (backend)</td><td class="p-3 sm:p-4 font-mono text-xs">npm i multer</td></tr>
+              <tr class="border-t line"><td class="p-3 sm:p-4 font-semibold text-blue-600">Material UI</td><td class="p-3 sm:p-4 muted">Componentes de UI listos y accesibles</td><td class="p-3 sm:p-4 font-mono text-xs">npm i @mui/material @emotion/react @emotion/styled</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mt-8 rounded-2xl p-6 sm:p-8 text-white bg-gradient-to-r from-indigo-600 to-fuchsia-600">
+        <div class="text-lg sm:text-xl font-bold">🎯 La regla de oro</div>
+        <p class="mt-2 text-white/90 max-w-3xl">No se trata de usar <em>muchas</em> librerías, sino de entender <strong>qué problema resuelve cada una</strong>. Si podés explicarlo en una frase, estás listo para usarla en un proyecto real.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t line">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-sm muted flex flex-wrap justify-between gap-2">
+      <span>Práctica Profesional II · Unidad 4</span>
+      <span>Guía de referencia rápida para React</span>
+    </div>
+  </footer>
+
+  <!-- ============ SNIPPETS ============ -->
+  <script>
+    const SNIPPETS = {
+      query: `import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+
+// 1) Axios: SOLO se encarga de la petición HTTP
+const api = axios.create({ baseURL: 'https://jsonplaceholder.typicode.com' });
+
+const fetchUsers = async () => {
+  const { data } = await api.get('/users');
+  return data;
+};
+
+// 2) TanStack Query: caché, estados y reintentos
+export function UserList() {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['users'],      // nombre en la caché
+    queryFn: fetchUsers,      // quién trae los datos
+    staleTime: 60_000,        // "frescos" durante 1 minuto
+    retry: 2,                 // reintenta 2 veces si falla
+  });
+
+  if (isLoading) return <p>Cargando...</p>;
+  if (isError)   return <p>Error: {error.message}</p>;
+
+  return (
+    <ul>
+      {data.map((u) => <li key={u.id}>{u.name}</li>)}
+    </ul>
+  );
+}
+
+// main.jsx → envolver la app UNA vez:
+// <QueryClientProvider client={new QueryClient()}>
+//   <App />
+// </QueryClientProvider>`,
+
+      form: `import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// 1) Zod: describimos CÓMO deben ser los datos
+const schema = z.object({
+  nombre: z.string().min(2, 'Mínimo 2 caracteres'),
+  email:  z.string().email('Email inválido'),
+  edad:   z.coerce.number().min(18, 'Tenés que ser mayor'),
+});
+
+// type FormData = z.infer<typeof schema>;  (con TypeScript)
+
+export function RegisterForm() {
+  // 2) RHF + zodResolver: el puente entre ambos
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({ resolver: zodResolver(schema) });
+
+  const onSubmit = (data) => console.log(data); // ya validado ✅
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register('nombre')} placeholder="Nombre" />
+      {errors.nombre && <span>{errors.nombre.message}</span>}
+
+      <input {...register('email')} placeholder="Email" />
+      {errors.email && <span>{errors.email.message}</span>}
+
+      <input type="number" {...register('edad')} />
+      {errors.edad && <span>{errors.edad.message}</span>}
+
+      <button disabled={isSubmitting}>Registrarme</button>
+    </form>
+  );
+}`,
+
+      multerServer: `const express = require('express');
+const multer  = require('multer');
+const path    = require('path');
+
+const app = express();
+
+// ¿Dónde y con qué nombre se guarda?
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (req, file, cb) => {
+    const unique = Date.now() + path.extname(file.originalname);
+    cb(null, unique);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 2 * 1024 * 1024 },           // máx. 2 MB
+  fileFilter: (req, file, cb) => {
+    const ok = ['image/png', 'image/jpeg'].includes(file.mimetype);
+    cb(ok ? null : new Error('Solo PNG o JPG'), ok);
+  },
+});
+
+// 'avatar' = nombre del campo que manda React
+app.post('/api/avatar', upload.single('avatar'), (req, res) => {
+  res.json({ url: \`/uploads/\${req.file.filename}\` });
+});
+
+app.use('/uploads', express.static('uploads'));
+app.listen(3000);`,
+
+      multerClient: `import axios from 'axios';
+
+export function AvatarUpload() {
+  const handleChange = async (e) => {
+    const formData = new FormData();
+    formData.append('avatar', e.target.files[0]);
+
+    // Axios detecta FormData y envía multipart/form-data
+    const { data } = await axios.post('/api/avatar', formData);
+    console.log('Subido en:', data.url);
+  };
+
+  return <input type="file" accept="image/*" onChange={handleChange} />;
+}`,
+
+      mui: `import {
+  Card, CardContent, CardActions,
+  Typography, Button, Chip,
+} from '@mui/material';
+
+export function ProductCard() {
+  return (
+    <Card sx={{ maxWidth: 360 }}>
+      <CardContent>
+        <Typography variant="h5">Teclado mecánico</Typography>
+        <Typography color="text.secondary">
+          Switches rojos · RGB
+        </Typography>
+        <Chip label="En stock" color="success" sx={{ mt: 1.5 }} />
+      </CardContent>
+      <CardActions>
+        <Button variant="contained">Comprar</Button>
+        <Button variant="outlined">Detalles</Button>
+      </CardActions>
+    </Card>
+  );
+}
+
+// Personalizar TODA la app desde un solo lugar:
+// const theme = createTheme({ palette: { primary: { main: '#6d28d9' } } });
+// <ThemeProvider theme={theme}><App /></ThemeProvider>`,
+    };
+
+    // Renderiza cada bloque de código con cabecera estilo editor + botón copiar
+    document.querySelectorAll('[data-code]').forEach((el) => {
+      const key = el.dataset.code;
+      el.className = 'rounded-[0.85rem] overflow-hidden shadow-lg min-w-0';
+      el.innerHTML = `
+        <div class="code-head flex items-center justify-between px-4 py-2.5">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
+            <span class="ml-2 font-mono text-xs text-slate-400"></span>
+          </div>
+          <button class="copy-btn text-xs text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded transition">Copiar</button>
+        </div>
+        <pre class="language-${el.dataset.lang}"><code class="language-${el.dataset.lang}"></code></pre>`;
+      el.querySelector('.font-mono').textContent = el.dataset.file;
+      el.querySelector('code').textContent = SNIPPETS[key];
+
+      el.querySelector('.copy-btn').addEventListener('click', async (e) => {
+        try {
+          await navigator.clipboard.writeText(SNIPPETS[key]);
+          e.target.textContent = '¡Copiado!';
+        } catch {
+          e.target.textContent = 'No se pudo copiar';
+        }
+        setTimeout(() => (e.target.textContent = 'Copiar'), 1500);
+      });
+    });
+
+    // Tema claro / oscuro
+    const root = document.documentElement;
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved) root.dataset.theme = saved;
+    } catch {}
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const isDark = root.dataset.theme
+        ? root.dataset.theme === 'dark'
+        : matchMedia('(prefers-color-scheme: dark)').matches;
+      root.dataset.theme = isDark ? 'light' : 'dark';
+      try { localStorage.setItem('theme', root.dataset.theme); } catch {}
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+  <script>Prism.highlightAll();</script>
+</body>
+</html>
